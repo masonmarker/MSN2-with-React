@@ -20,7 +20,7 @@
                 # a free api url as the first
                 # argument to request()
                 (
-                    @ joke = revquest(
+                    @ joke = request(
                         'https://official-joke-api.appspot.com/random_joke'
                     ),
                     @ joke = +(get(joke, 'setup'), ' -> ', get(joke, 'punchline'))

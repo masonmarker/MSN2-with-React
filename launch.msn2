@@ -100,11 +100,6 @@ file.write('msn2withreact/src/App.js', script(
                     ))=}
                 ))=}
 
-                # Divider component
-                {=divider=}
-
-                
-
                 # code output
                 <p ref={output}></p>
 
