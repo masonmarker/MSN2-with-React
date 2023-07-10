@@ -1,0 +1,49 @@
+# JavaScript for communication with
+# MSN2 server
+#
+# author : Mason Marker
+# date : 7/7/2023
+
+# import server information,
+# if not already in this environment
+import ('server')
+
+# serialization
+import ('lib/serial')
+
+# JavaScript for communication 
+# with MSN2 server.
+@ js:link = script(
+
+    # headers for fetch
+    const _msn2_headers = useMemo(() => {return { "Content-Type": "application/json" }}, []);
+    const _msn2_port = 8080;
+
+    # gets from the MSN2 server
+    const _msn2_get = useCallback(async function (field) {
+        return await fetch(`http://localhost:${_msn2_port}/`, {
+            method: "GET",
+            headers: _msn2_headers,
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            return data[field];
+        });
+    }, [_msn2_headers]);
+
+    # posts to the MSN2 server
+    const _msn2_post = useCallback(function (field, value) {
+        const posting = {};
+        posting[field] = value;
+        fetch(`http://localhost:${_msn2_port}/`, {
+            method: "POST",
+            headers: _msn2_headers,
+            body: JSON.stringify(posting),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            return data[field];
+        });
+    }, [_msn2_headers]);
+
+) 

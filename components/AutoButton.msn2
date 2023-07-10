@@ -1,0 +1,32 @@
+# Button to launch an automation
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+# import style tag injections
+import ('styles/App')
+
+# creating automation button component
+@ auto:button = HTML(
+
+    # setting className this way is unnecessary,
+    # but is just an example of tag injection
+    <button {=className('button')=} onClick={{=
+
+        # run MSN2 code
+        callback(script((
+
+            # define and launch the notepad
+            @ notepad = app('notepad.exe'),
+            notepad.start(),
+            notepad.write(joke),
+            sleep(4),
+            notepad.close()
+
+        # after receiving a response,
+        # perform JavaScript
+        )), 'response', script(), {}, '')
+    =}}>
+        Launch Automation
+    </button>
+)

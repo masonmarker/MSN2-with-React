@@ -1,0 +1,102 @@
+# Web functions for signaling
+# MSN2 execution requests.
+#
+# author : Mason Marker
+# date : 7/7/2023
+
+# using serialization
+import ('lib/serial')
+
+# open serialization for callbacks
+serial_open('_msn2_request')
+serial_open('_msn2_response')
+
+# I could just write a js function
+# to import into the code and 
+# repeatedly call it, but I'm too lazy,
+# so code repetition it is (we're good coders, right?)
+
+# async callback, same code, but with async
+function(@_cbasync='callback', ret(_cbasync, script(
+    # make a post request to the server
+    # under the 'button' field
+    async ({=callback:eventvar=}) => {
+
+        # post resources to the field
+        # '_msn2_resources' as an {}
+        # so that they can be used
+        # during the execution of MSN2 code
+        const _msn2_resources = {=(
+            @ callback:resources_map_str = '{',
+            callback:resources.foreach('callback:resourcevar', 'callback:resourceval', (
+                callback:resources_map_str.add(
+                    cat(callback:resourcevar, ':', callback:resourceval, ',')
+                )
+            )),
+            callback:resources_map_str.add('}')
+        )=};
+        _msn2_post('_msn2_resources', _msn2_resources);
+
+        # post the script to execute to the field
+        _msn2_post(`{=@_curr_msn2_request=
+            cat('_msn2_request', serial_next('_msn2_request'))=}`, 
+            `{=callback:script=}`);
+                
+        # waits for a response
+        function waitForResponse(callback) {
+            function checkResponse() {
+
+                # wait for response from MSN2
+                _msn2_get("{=@_curr_msn2_response=
+                    cat('_msn2_response', serial_next('_msn2_response'))=}")
+                .then((msn2_response) => {
+
+                    # wait for a response from the MSN2 server
+                    if (msn2_response === '' <or> !msn2_response) {
+                        setTimeout(checkResponse, 10);
+                    } else {
+                        callback(msn2_response);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+            checkResponse();
+        };
+
+        waitForResponse(({=callback:responsevar=}) => {
+            # remove the response field
+            _msn2_post('{=_curr_msn2_response=}', '');
+            # and request
+            _msn2_post('{=_curr_msn2_request=}', '');
+            {=callback:then=};
+            # return the response to this callback
+            return {=callback:responsevar=};
+        });
+    }
+)), 'callback:script', 'callback:responsevar', 'callback:then', 'callback:resources', 'callback:eventvar')
+
+# useEffect implementation with async callback
+function(@_we='effect', ret(_we, (
+
+    # form deps string
+    @ effect:deps_string = '[',
+
+    # add each dependency to the deps string
+    effect:deps.each('effect:dep', effect:deps_string.add(cat(effect:dep, ','))),
+
+    # add _msn2_get and _msn2_post to deps
+    effect:deps_string.add('_msn2_get,'),
+    effect:deps_string.add('_msn2_post'),
+
+    # closing paren
+    effect:deps_string.add(']'),
+
+    # actual useEffect code
+    script(
+        useEffect(() => {
+            ({=callback(effect:script, effect:responsevar, effect:then, effect:resources, effect:eventvar)=})()
+        }, {=effect:deps_string=});
+    )
+)), 'effect:script', 'effect:responsevar', 'effect:then', 'effect:deps', 'effect:resources', 'effect:eventvar')

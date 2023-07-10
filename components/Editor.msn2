@@ -1,0 +1,33 @@
+# Text Component.
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+@ editor = HTML(
+      <textarea style={{
+            width: "30%",
+            height: "200px",
+            background: "#222",
+            color: "#ffffff",
+            border: "none",
+            padding: "10px",
+            fontFamily: "monospace",
+            fontSize: "16px",
+            outline: "none",
+            overflow: "auto",
+            textAlign: "left",
+            borderRadius: "5px",
+            transition: "background 0.2s ease",
+            margin: "0 auto"
+        }}
+        onMouseOver={(e) => {
+            e.target.style.background = "#333";
+        }}
+        onMouseOut={(e) => {
+            e.target.style.background = "#222";
+        }}
+        rows="4"
+        placeholder="Type any code here..."
+        ref={editor}
+      ></textarea>
+)

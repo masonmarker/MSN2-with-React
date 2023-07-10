@@ -1,0 +1,48 @@
+# Runs code
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+@ run_java:button = HTML(
+    <button className="button" onClick={{=
+
+        callback(script((
+            print('code:', java_code),
+            @ java_code = +('public class Main {
+                public static void main(String[] args) {'
+                    , java_code, '
+                }
+            }'),
+
+            get(JAVA(, 'Main', java_code), 'out')
+        )), 'response',  script(
+            output.current.innerHTML = response;
+        ), {'java_code': 'editor.current.value'}, '')
+    =}}>
+        Run as Java
+    </button>
+)
+
+@ run_c:button = HTML(
+    <button className="button" onClick={{=
+        callback(script((
+            get(C(, c_code), 'out')
+        )), 'response',  script (
+            output.current.innerHTML = response;
+        ), {'c_code': 'editor.current.value'}, '')
+    =}}>
+        Run as C
+    </button>
+)
+
+@ run_node:button = HTML(
+    <button className="button" onClick={{=
+        callback(script((
+            get(JS(,'test', node_code), 'out')
+        )), 'response',  script (
+            output.current.innerHTML = response;
+        ), {'node_code': 'editor.current.value'}, '')
+    =}}>
+        Run as Node
+    </button>
+)

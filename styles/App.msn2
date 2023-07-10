@@ -1,0 +1,9 @@
+# Main app style msn2 components
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+# setting a className
+function(@_a:cn='className', ret(_a:cn, HTML(
+    className="{=className:className=}"
+)), 'className:className')

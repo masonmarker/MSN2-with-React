@@ -1,0 +1,15 @@
+# Divider component.
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+# Divider component
+@ divider = HTML(
+    <hr style={{
+        width: "30%",
+        height: "1px",
+        background: "linear-gradient(to right, #000000, #ffffff, #000000)",
+        border: "none",
+        margin: "40px auto"
+    }}/>
+)

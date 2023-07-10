@@ -1,0 +1,91 @@
+# Starts the MSN2 handler
+#
+# author : Mason Marker
+# date : 7/7/2023
+
+@ server:port = 8080
+
+# set Python runner alias
+alias('py')
+
+# start Flask server in new process
+proc('server', -(script(ENDPOINT(
+
+    # URL
+    '127.0.0.1',
+
+    # import port from
+    # parent context, as this
+    # scope is a new process
+    {=server:port=},
+    '/',
+
+    # initial data
+    {
+
+        # resources from JavaScript to be used during the
+        # execution of MSN2 code
+        '_msn2_resources': {}
+    },
+
+    # using CORS
+    "CORS"
+))))
+
+
+# import local api information
+import ('lib/apis/api')
+@ local = cors_api()
+
+# handler for msn2 execution requests
+thread(interval(0.08, (
+    
+    # wait for a request from front end
+    # we know a request is being made if
+    # a key field in local that starts with
+    # '_msn2_request' is not ""
+    as('_local', local.GET(), 
+
+        # for each possible request
+        _local.foreach('_key', '_val',
+
+            # check if a request is being made
+            if (and(_key.startswith('_msn2_request'), 
+                not(_val.equals(''))), 
+
+                    # start a private thread
+                    # to handle the execution request
+                    (
+
+                        print('requesting: ', _key),
+                        print('value: ', _val),
+                        
+                        # import variables from JavaScript
+                        # to be used during the execution
+                        # of MSN2 code
+                        @ _msn2_resources = get(local.GET(), '_msn2_resources'),
+
+                        # for each resource, add to this environment
+                        _msn2_resources.foreach('_msn2_resource:varname', '_msn2_resource:varvalue',
+                            var(_msn2_resource:varname, _msn2_resource:varvalue)
+                        ),
+
+                        # get the request number
+                        # from the key
+                        @ request:number = _key.slice(13,),
+
+                        # post the execution of the script to
+                        # _msn2_response{request:number}
+                        local.POSTENTRY(
+                            +('_msn2_response', request:number),
+                            -(_val)
+                        ),
+
+                        # wait for the request to be received
+                        # by the front end
+                        wait(not(get(local.GET(), cat('_msn2_request', request:number))),,0.05)
+                    )
+             )
+        )
+    )
+)))

@@ -1,0 +1,37 @@
+# Button for calling API
+#
+# author : Mason Marker
+# date : 7/9/2023
+
+# API button component,
+# requests setup and punchline from a joke API
+@ api:button = HTML(
+    
+    <button className="button" onClick={{=
+
+        # makes a request to the server
+        # to execute the script,
+        # effectively serving as js async().then()
+        callback(
+
+            # using MSN2 scripting
+            script(
+                # make an api request to
+                # a free api url as the first
+                # argument to request()
+                (
+                    @ joke = revquest(
+                        'https://official-joke-api.appspot.com/random_joke'
+                    ),
+                    @ joke = +(get(joke, 'setup'), ' -> ', get(joke, 'punchline'))
+                )
+            # response variable and 
+            # code to execute
+            ), 'response', script(
+                console.log(response);
+                display.current.innerHTML = response;
+            ), {}, '')
+    =}}>
+        Call Joke API
+    </button>
+)

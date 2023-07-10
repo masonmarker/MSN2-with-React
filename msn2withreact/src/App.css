@@ -1,0 +1,85 @@
+* {
+  text-align: center;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  align-self: center;
+  text-align: center;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: width 0.3s ease;
+}
+
+.button:hover::before {
+  width: 100%;
+}
+
+.button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Optional: Add additional styles for different button states */
+
+.button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.button.disabled::before {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.button.disabled span {
+  opacity: 0.8;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.input.invalid {
+  border-color: #dc3545;
+}
+
+.input.invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}

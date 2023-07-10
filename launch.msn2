@@ -1,0 +1,120 @@
+# Development environment entry point for
+# msn2 and ReactJS.
+#
+# All components could be defined in React as
+# opposed to their generation in MSN2,
+# ex: {=divider=} could just be a <Divider/>
+# as this retains ALL Reactive functionality.
+#
+# this example just demonstrates what's
+# possible!
+#
+# author : Mason Marker
+# date : 7/7/2023
+
+# import JavaScript link
+# to MSN2 server
+import ('js')
+
+# import MSN2 web functions and
+# start MSN2 backend
+import ('server')
+import ('web')
+
+# import components
+import ('components/Containers')
+import ('components/Divider')
+import ('components/Editor')
+import ('components/ApiButton')
+import ('components/AutoButton')
+import ('components/RunButtons')
+
+# write new code to App.js
+file.write('msn2withreact/src/App.js', script(
+
+    # imports
+    import './App.css';
+    import { useRef, useCallback, useMemo, useEffect } from 'react';
+
+    # main app component
+    function App() {
+
+        # add JavaScript linkage
+        # functions
+        {=js:link=}
+        
+
+        # reference to display <p>
+        const display = useRef();
+        # reference to code editor
+        const editor = useRef();
+        # reference to code output
+        const output = useRef();
+
+        # MSN2 useEffect
+        {=
+        effect(
+            script(
+                 +('Wait', 'ing...') 
+            ), 'response', script(
+                display.current.innerHTML = response;
+
+            # ['display'] -> useEffect dependencies
+            # {} -> JavaScript variables needed by MSN2 server
+            # '' -> event variable name for callback
+            ), ['display'], {}, '')
+        =}
+
+        # return main component
+        return (
+            <div>
+                <h1>MSN2 with React!</h1>
+                <p ref={display}></p>
+                
+                # Column component,
+                # places children in a column
+                {=Col(HTML(
+                    # API calling button
+                    {=api:button=}
+
+                    # button to launch an automation
+                    # on the local machine
+                    {=auto:button=}               
+                ))=}
+
+                # Divider component
+                {=divider=}
+
+                # Code editor!
+                {=Col(HTML(
+                    {=editor=}
+                    {=Row(HTML(
+                        # Running Java
+                        {=run_java:button=}
+
+                        # Running C
+                        {=run_c:button=}
+
+                        # Running Node
+                        {=run_node:button=}
+                    ))=}
+                ))=}
+
+                # Divider component
+                {=divider=}
+
+                
+
+                # code output
+                <p ref={output}></p>
+
+            </div>
+        );
+    }
+
+    # export app
+    export default App;
+))
+
+# launch the React App dev env
+console('cmd /c "cd msn2withreact & npm start"')
